@@ -1,51 +1,32 @@
-<script lang="ts">
-import { defineComponent } from "vue";
-import { generateTableData, type Row } from "@/pages/campaigns/tableData";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { type Filters, generateTableData } from "@/pages/campaigns/tableData";
 import CampaignsTable from "@/pages/campaigns/CampaignsTable.vue";
-import CampaignsFilters, {
-  type Filters,
-} from "@/pages/campaigns/CampaignsFilters.vue";
+import CampaignsFilters from "@/pages/campaigns/CampaignsFilters.vue";
 
-type Data = {
-  tableData: Row[];
-  filters: Filters;
-};
+const tableData = ref(generateTableData(50));
+const filters = ref<Filters>({
+  statuses: [],
+  dates: [],
+});
 
-export default defineComponent({
-  components: {
-    CampaignsTable,
-    CampaignsFilters,
-  },
-  data(): Data {
-    return {
-      tableData: generateTableData(50),
-      filters: {
-        statuses: [],
-        dates: [],
-      },
-    };
-  },
-  computed: {
-    filteredTableData() {
-      let result = this.tableData;
+const filteredTableData = computed(() => {
+  let result = tableData.value;
+  const { statuses, dates } = filters.value;
 
-      if (this.filters.statuses.length) {
-        result = result.filter((row) =>
-          this.filters.statuses.includes(row.status)
-        );
-      }
+  if (statuses.length) {
+    result = result.filter((row) => statuses.includes(row.status));
+  }
 
-      if (this.filters.dates?.length) {
-        const startRange = this.filters.dates[0].toISOString().split("T")[0];
-        const endRange = this.filters.dates[1].toISOString().split("T")[0];
-        result = result.filter((row) => {
-          return row.startDate >= startRange && row.endDate <= endRange;
-        });
-      }
+  if (dates?.length) {
+    const startRange = dates[0].toISOString().split("T")[0];
+    const endRange = dates[1].toISOString().split("T")[0];
+    result = result.filter((row) => {
+      return row.startDate >= startRange && row.endDate <= endRange;
+    });
+  }
 
-      return result;
-    },
-  },
+  return result;
 });
 </script>
 

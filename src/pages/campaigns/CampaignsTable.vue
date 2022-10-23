@@ -1,28 +1,16 @@
-<script lang="ts">
-import { defineComponent } from "vue";
-import type { PropType } from "vue";
-import type { Row } from "./tableData";
+<script setup lang="ts">
+import { Row } from "./tableData";
+
+type Props = {
+  data: Row[];
+};
+
+defineProps<Props>();
 
 const numberFormatter = new Intl.NumberFormat();
-
-export default defineComponent({
-  props: {
-    data: { type: Array as PropType<Row[]>, required: true },
-  },
-  methods: {
-    formatImpressions(row: Row) {
-      return numberFormatter.format(row.impressions);
-    },
-
-    formatClicks(row: Row) {
-      return numberFormatter.format(row.clicks);
-    },
-
-    formatCTR(row: Row) {
-      return (row.ctr * 100).toFixed(2);
-    },
-  },
-});
+const formatImpressions = (row: Row) => numberFormatter.format(row.impressions);
+const formatClicks = (row: Row) => numberFormatter.format(row.clicks);
+const formatCTR = (row: Row) => (row.ctr * 100).toFixed(2);
 </script>
 
 <template>

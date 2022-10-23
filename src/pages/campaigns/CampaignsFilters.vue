@@ -1,50 +1,40 @@
-<script lang="ts">
-import { defineComponent, type PropType } from "vue";
-import { statuses } from "@/pages/campaigns/tableData";
-import type { Status } from "@/pages/campaigns/tableData";
+<script setup lang="ts">
+import { Filters, statuses } from "@/pages/campaigns/tableData";
+import { Status } from "@/pages/campaigns/tableData";
 
-type Data = {
-  statuses: Status[];
+type Props = {
+  modelValue: Filters;
 };
 
-export type Filters = {
-  statuses: Status[];
-  dates: Date[] | null;
+const props = defineProps<Props>();
+
+const emit = defineEmits<{
+  (e: "update:modelValue", payload: Filters): void;
+}>();
+
+const onChangeStatuses = (statuses: Status[]) => {
+  emit("update:modelValue", {
+    ...props.modelValue,
+    statuses,
+  });
 };
 
-export default defineComponent({
-  props: {
-    modelValue: { type: Object as PropType<Filters>, required: true },
-  },
-  emits: {
-    "update:modelValue"(payload: Filters) {
-      return true; // no runtime validation
-    },
-  },
-  data(): Data {
-    return {
-      statuses,
-    };
-  },
-  methods: {
-    onChangeStatuses(statuses: Status[]) {
-      this.$emit("update:modelValue", {
-        ...this.modelValue,
-        statuses,
-      });
-    },
-    onChangeDates(dates: Date[] | null) {
-      if (dates !== null && (dates[0] === null || dates[1] === null)) {
-        return;
-      }
+type DatepickerValue = [Date | null, Date | null] | null;
 
-      this.$emit("update:modelValue", {
-        ...this.modelValue,
-        dates,
-      });
-    },
-  },
-});
+const isValidRange = (dates: DatepickerValue): dates is [Date, Date] | null => {
+  return dates === null || (dates[0] !== null && dates[1] !== null);
+};
+
+const onChangeDates = (dates: [Date | null, Date | null] | null) => {
+  if (!isValidRange(dates)) {
+    return;
+  }
+
+  emit("update:modelValue", {
+    ...props.modelValue,
+    dates,
+  });
+};
 </script>
 
 <template>
