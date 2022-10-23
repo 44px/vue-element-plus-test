@@ -38,30 +38,26 @@ const onChangeDates = (dates: [Date | null, Date | null] | null) => {
 </script>
 
 <template>
-  <el-space size="large">
-    <el-select
+  <div>
+    <v-autocomplete
       :model-value="modelValue.statuses"
-      @change="onChangeStatuses"
+      @update:model-value="onChangeStatuses"
+      label="Status"
       multiple
-      filterable
-      :reserve-keyword="false"
-      placeholder="Status"
-      ><el-option v-for="status in statuses" :key="status" :value="status"
-        ><el-tag
-          :type="status === 'active' ? 'success' : 'warning'"
-          disable-transitions
-          >{{ status }}</el-tag
-        ></el-option
-      ></el-select
+      chips
+      clearable
+      :items="statuses"
+    >
+      ></v-autocomplete
     >
 
-    <el-date-picker
-      :model-value="modelValue.dates"
-      @calendar-change="onChangeDates"
-      @change="onChangeDates"
-      type="daterange"
-      start-placeholder="Start date"
-      end-placeholder="End date"
-    />
-  </el-space>
+    <!--    <el-date-picker-->
+    <!--      :model-value="modelValue.dates"-->
+    <!--      @calendar-change="onChangeDates"-->
+    <!--      @change="onChangeDates"-->
+    <!--      type="daterange"-->
+    <!--      start-placeholder="Start date"-->
+    <!--      end-placeholder="End date"-->
+    <!--    />-->
+  </div>
 </template>
