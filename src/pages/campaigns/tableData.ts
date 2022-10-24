@@ -2,6 +2,11 @@ export type Status = "active" | "paused";
 
 export const statuses: Status[] = ["active", "paused"];
 
+export type Filters = {
+  statuses: Status[];
+  dates: Date[] | null;
+};
+
 export type Row = {
   name: string;
   impressions: number;
