@@ -8,49 +8,38 @@ type Props = {
 defineProps<Props>();
 
 const numberFormatter = new Intl.NumberFormat();
-const formatImpressions = (row: Row) => numberFormatter.format(row.impressions);
-const formatClicks = (row: Row) => numberFormatter.format(row.clicks);
-const formatCTR = (row: Row) => (row.ctr * 100).toFixed(2);
+const formatNumber = (value: number) => numberFormatter.format(value);
+const formatCTR = (value: number) => (value * 100).toFixed(2);
 </script>
 
 <template>
-  <el-table
-    :data="data"
-    :default-sort="{ prop: 'impressions', order: 'ascending' }"
-    row-key="name"
-  >
-    <el-table-column prop="name" label="Name" />
-    <el-table-column prop="status" label="Status">
-      <template #default="scope">
-        <el-tag
-          :type="scope.row.status === 'active' ? 'success' : 'warning'"
-          disable-transitions
-          >{{ scope.row.status }}</el-tag
-        >
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="impressions"
-      label="Impressions"
-      align="right"
-      :sortable="true"
-      :formatter="formatImpressions"
-    />
-    <el-table-column
-      prop="clicks"
-      label="Clicks"
-      align="right"
-      :sortable="true"
-      :formatter="formatClicks"
-    />
-    <el-table-column
-      prop="ctr"
-      label="CTR"
-      align="right"
-      :sortable="true"
-      :formatter="formatCTR"
-    />
-    <el-table-column prop="startDate" label="Start Date" :sortable="true" />
-    <el-table-column prop="endDate" label="End Date" :sortable="true" />
-  </el-table>
+  <v-table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th class="text-right">Impressions</th>
+        <th class="text-right">Clicks</th>
+        <th class="text-right">CTR</th>
+        <th>Start date</th>
+        <th>End date</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr v-for="row in data" :key="row.name">
+        <td>{{ row.name }}</td>
+        <td>
+          <v-chip :color="row.status === 'active' ? 'green' : 'yellow'">{{
+            row.status
+          }}</v-chip>
+        </td>
+        <td class="text-right">{{ formatNumber(row.impressions) }}</td>
+        <td class="text-right">{{ formatNumber(row.clicks) }}</td>
+        <td class="text-right">{{ formatCTR(row.ctr) }}</td>
+        <td>{{ row.startDate }}</td>
+        <td>{{ row.endDate }}</td>
+      </tr>
+    </tbody>
+  </v-table>
 </template>

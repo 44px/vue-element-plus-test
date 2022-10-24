@@ -4,34 +4,14 @@ import { routes } from "@/pages/router";
 </script>
 
 <template>
-  <el-container>
-    <el-header class="header">
-      <el-menu
-        class="menu"
-        mode="horizontal"
-        router
-        :default-active="$route.path"
-      >
-        <el-menu-item :index="routes.home()">Home</el-menu-item>
-        <el-menu-item :index="routes.campaigns()">List</el-menu-item>
-      </el-menu>
-    </el-header>
+  <v-app>
+    <v-app-bar app>
+      <v-btn variant="text" :to="routes.home()">Home</v-btn>
+      <v-btn variant="text" :to="routes.campaigns()">List</v-btn>
+    </v-app-bar>
 
-    <el-main>
-      <RouterView />
-    </el-main>
-  </el-container>
+    <v-main>
+      <v-container fluid><RouterView /></v-container>
+    </v-main>
+  </v-app>
 </template>
-
-<style scoped>
-.header {
-  background: var(--el-color-primary);
-}
-
-.menu {
-  --el-menu-text-color: var(--el-color-white);
-  --el-menu-active-color: var(--el-color-primary-light-7);
-  --el-menu-bg-color: transparent;
-  --el-menu-border-color: transparent;
-}
-</style>
