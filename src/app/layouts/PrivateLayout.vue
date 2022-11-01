@@ -2,6 +2,8 @@
 import { Menu as MenuIcon, User } from "@element-plus/icons-vue";
 import NavigationMenu from "@/app/layouts/NavigationMenu.vue";
 import { useSidebar } from "@/app/layouts/useSidebar";
+import { routes } from "@/pages/router";
+import UtcTime from "@/app/layouts/UtcTime.vue";
 
 const { isSidebarVisible, sidebarMode, toggleSidebar } = useSidebar();
 </script>
@@ -26,13 +28,21 @@ const { isSidebarVisible, sidebarMode, toggleSidebar } = useSidebar();
       <el-header class="header">
         <el-button text :icon="MenuIcon" @click="toggleSidebar()" />
 
-        <div>
-          <el-dropdown trigger="click">
+        <div class="header__right">
+          <UtcTime />
+
+          <el-dropdown trigger="click" size="default">
             <el-button text :icon="User" />
 
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item>Profile</el-dropdown-item>
+                <el-dropdown-item>
+                  <RouterLink
+                    :to="routes.profile()"
+                    style="text-decoration: none; color: inherit"
+                    >Profile</RouterLink
+                  >
+                </el-dropdown-item>
                 <el-dropdown-item>Log out</el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -69,5 +79,11 @@ const { isSidebarVisible, sidebarMode, toggleSidebar } = useSidebar();
   height: 40px;
   background: var(--el-drawer-bg-color);
   border-bottom: 1px solid var(--el-border-color);
+}
+
+.header__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 </style>

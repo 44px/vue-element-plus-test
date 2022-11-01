@@ -1,16 +1,8 @@
 import { computed, ref, watch } from "vue";
 import { useMediaQuery } from "@vueuse/core";
+import { getItemStorage } from "@/lib/localStorage";
 
-const LS_IS_SIDEBAR_VISIBLE = "rmIsSidebarVisible";
-
-const saveIsSidebarVisible = (collapse: boolean) => {
-  localStorage.setItem(LS_IS_SIDEBAR_VISIBLE, JSON.stringify(collapse));
-};
-
-const restoreIsSidebarVisible = (): boolean => {
-  const value = localStorage.getItem(LS_IS_SIDEBAR_VISIBLE);
-  return value ? JSON.parse(value) : true;
-};
+const isSidebarVisibleStorage = getItemStorage("isSidebarVisible", true);
 
 export const useSidebar = () => {
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
@@ -19,7 +11,7 @@ export const useSidebar = () => {
   });
 
   const isSidebarVisible = ref(
-    isLargeScreen.value ? restoreIsSidebarVisible() : false
+    isLargeScreen.value ? isSidebarVisibleStorage.get() : false
   );
 
   const toggleSidebar = () => {
@@ -29,13 +21,13 @@ export const useSidebar = () => {
   // Automatically show/hide menu on window resize
   watch(isLargeScreen, () => {
     isSidebarVisible.value = isLargeScreen.value
-      ? restoreIsSidebarVisible()
+      ? isSidebarVisibleStorage.get()
       : false;
   });
 
   watch(isSidebarVisible, () => {
     if (isLargeScreen.value) {
-      saveIsSidebarVisible(isSidebarVisible.value);
+      isSidebarVisibleStorage.set(isSidebarVisible.value);
     }
   });
 
